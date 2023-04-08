@@ -2,10 +2,9 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import random
-import os
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
 class App(customtkinter.CTk):
@@ -132,20 +131,7 @@ class App(customtkinter.CTk):
         self.button4_frame_textbox = customtkinter.CTkTextbox(self.button4_frame, height=80, width=425, corner_radius=10)
         self.button4_frame_textbox.grid(row=4, column=0, columnspan=2, pady=10)
 
-        #Decryption Table
         self.button5_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.button5_frame.grid_columnconfigure((0,1), weight=1)
-        self.button5_frame.grid_rowconfigure((0,1,2,3,4,5), weight=1)
-        self.button5_frame_title = customtkinter.CTkLabel(self.button5_frame, text="Decryption Table",compound="left", font=customtkinter.CTkFont(size=22, weight="bold"))
-        self.button5_frame_title.grid(row=0, column=0, padx=20, pady=15, columnspan=2)
-        self.button5_frame_label = customtkinter.CTkLabel(self.button5_frame, text="Enter text to decrpyt: ",compound="left")
-        self.button5_frame_label.grid(row=1, column=0, sticky="e")
-        self.button5_frame_entry = customtkinter.CTkEntry(self.button5_frame, placeholder_text="Text Here", width=285, height=50, corner_radius=10)
-        self.button5_frame_entry.grid(row=1, column=1, padx=10)
-        self.button5_frame_submitbutton = customtkinter.CTkButton(self.button5_frame, text="Decrpyt",width=425, height=40, command=self.decrypttable)
-        self.button5_frame_submitbutton.grid(row=2, column=0, columnspan=2)
-        self.button5_frame_statuslabel = customtkinter.CTkLabel(self.button5_frame, text="Decryption Table will be created in a txt file.")
-        self.button5_frame_statuslabel.grid(row=3, column=0, columnspan=2)
 
         #User Key Decryption
         self.button6_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -224,6 +210,7 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("button4")
     
     def button5_event(self):
+        print("Encryption successful!5")
         self.select_frame_by_name("button5")
 
     def button6_event(self):
@@ -273,26 +260,11 @@ class App(customtkinter.CTk):
         r = tkinter.Tk()
         r.clipboard_append(result)
         r.destroy()
-
-    def decrypttable(self):
-        text=self.button5_frame_entry.get() 
-        with open("DecryptionTable.txt", "w") as f:
-            f.write("Key\tText\n")
-            f.write("=============================\n")
-            for i in range(0,26):
-                result=self.decryption(text,i)
-                f.write(f"{i}\t{result}\n")
-        self.button5_frame_statuslabel.configure(text="File created DecryptionTable.txt!")
-        self.button5_frame_openbutton = customtkinter.CTkButton(self.button5_frame, text="Open File", command=self.openfile)
-        self.button5_frame_openbutton.grid(row=4, column=0, columnspan=2)
-        
-    def openfile(self):
-        os.startfile('DecryptionTable.txt')
         
     def userdec(self):
         text=self.button6_frame_entry.get() 
         key=int(self.button6_frame_keyentry.get())
-        result=self.decryption(text,key)
+        result=self.encryption(text,key)
         print(result)
         self.button6_frame_textbox.insert("0.0", result)
         r = tkinter.Tk()
