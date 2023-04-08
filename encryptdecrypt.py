@@ -3,6 +3,9 @@ import tkinter.messagebox
 import customtkinter
 import random
 import os
+from langdetect import detect_langs
+from langdetect import DetectorFactory
+
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -167,6 +170,18 @@ class App(customtkinter.CTk):
         self.button6_frame_textbox.grid(row=4, column=0, columnspan=2, pady=10)
 
         self.button7_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.button7_frame.grid_columnconfigure((0,1), weight=1)
+        self.button7_frame.grid_rowconfigure((0,1,2,3,4,5), weight=1)
+        self.button7_frame_title = customtkinter.CTkLabel(self.button7_frame, text="SMART Decryption",compound="left", font=customtkinter.CTkFont(size=22, weight="bold"))
+        self.button7_frame_title.grid(row=0, column=0, padx=20, pady=15, columnspan=2)
+        self.button7_frame_label = customtkinter.CTkLabel(self.button7_frame, text="Enter text to decrpyt: ",compound="left")
+        self.button7_frame_label.grid(row=1, column=0, sticky="e")
+        self.button7_frame_entry = customtkinter.CTkEntry(self.button7_frame, placeholder_text="Text Here", width=285, height=50, corner_radius=10)
+        self.button7_frame_entry.grid(row=1, column=1, padx=10)
+        self.button7_frame_submitbutton = customtkinter.CTkButton(self.button7_frame, text="Decrpyt",width=425, height=40, command=self.smartdec)
+        self.button7_frame_submitbutton.grid(row=2, column=0, columnspan=2)
+        self.button7_frame_statuslabel = customtkinter.CTkLabel(self.button7_frame, text="SMART Decryption will find the most probable set of keys for the encrypted text.")
+        self.button7_frame_statuslabel.grid(row=3, column=0, columnspan=2)
 
         self.select_frame_by_name("button1")
 
@@ -230,7 +245,6 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("button6")
 
     def button7_event(self):
-        print("Encryption successful!7")
         self.select_frame_by_name("button7")
 
     def standardenc(self):
@@ -288,6 +302,29 @@ class App(customtkinter.CTk):
         
     def openfile(self):
         os.startfile('DecryptionTable.txt')
+
+    def smartdec(self):
+        text=self.button7_frame_entry.get() 
+        # DetectorFactory.seed = 0
+        self.keys=[]
+        for i in range(0,26):
+            result=self.decryption(text,i)
+            langtest=detect_langs(result)
+            # print(f"{i} {result} {langtest}")
+            lang_conf=str(langtest[0])
+            lang=lang_conf.split(":")[0]
+            conf=float(lang_conf.split(":")[1])
+            if(lang=="en" and conf>0.5):
+                self.keys.append(i)
+                with open(f"Decrypted_Key{i}.txt", "w") as f:
+                    f.write(f"{result}")
+        self.button7_frame_statuslabel.configure(text=f"Possible keys: {self.keys}",font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.button7_frame_openbutton = customtkinter.CTkButton(self.button7_frame, text="Open Decrypted Files", command=self.openfiles)
+        self.button7_frame_openbutton.grid(row=4, column=0, columnspan=2)
+
+    def openfiles(self):
+        for key in self.keys:
+            os.startfile(f'Decrypted_Key{key}.txt')
         
     def userdec(self):
         text=self.button6_frame_entry.get() 
