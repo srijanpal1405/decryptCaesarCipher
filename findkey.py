@@ -1,4 +1,4 @@
-# from langdetect import detect
+from langdetect import detect
 from langdetect import detect_langs
 
 text="hello this is test"
