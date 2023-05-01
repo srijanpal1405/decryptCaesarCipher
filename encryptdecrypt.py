@@ -4,8 +4,6 @@ import customtkinter
 import random
 import os
 from langdetect import detect_langs
-from langdetect import DetectorFactory
-
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -248,6 +246,7 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("button7")
 
     def standardenc(self):
+        self.button1_frame_textbox.delete("1.0","end")
         text=self.button1_frame_entry.get() 
         result=self.encryption(text,3)
         print(result)
@@ -257,6 +256,7 @@ class App(customtkinter.CTk):
         r.destroy()
 
     def randomenc(self, key):
+        self.button2_frame_textbox.delete("1.0","end")
         text=self.button2_frame_entry.get() 
         result=self.encryption(text,key)
         print(result)
@@ -270,6 +270,7 @@ class App(customtkinter.CTk):
         self.button2_frame_keylabel.configure(text=f"Key : {self.key}")
 
     def userenc(self):
+        self.button3_frame_textbox.delete("1.0","end")
         text=self.button3_frame_entry.get() 
         key=int(self.button3_frame_keyentry.get())
         result=self.encryption(text,key)
@@ -280,6 +281,7 @@ class App(customtkinter.CTk):
         r.destroy()
 
     def standarddec(self):
+        self.button4_frame_textbox.delete("1.0","end")
         text=self.button4_frame_entry.get() 
         result=self.decryption(text,3)
         print(result)
@@ -314,7 +316,7 @@ class App(customtkinter.CTk):
             lang_conf=str(langtest[0])
             lang=lang_conf.split(":")[0]
             conf=float(lang_conf.split(":")[1])
-            if(lang=="en" and conf>0.5):
+            if(lang=="en" and conf>0.7):
                 self.keys.append(i)
                 with open(f"Decrypted_Key{i}.txt", "w") as f:
                     f.write(f"{result}")
@@ -327,6 +329,7 @@ class App(customtkinter.CTk):
             os.startfile(f'Decrypted_Key{key}.txt')
         
     def userdec(self):
+        self.button6_frame_textbox.delete("1.0","end")
         text=self.button6_frame_entry.get() 
         key=int(self.button6_frame_keyentry.get())
         result=self.decryption(text,key)
